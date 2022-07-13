@@ -1,6 +1,7 @@
 package tests;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
@@ -9,10 +10,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverConditions.url;
 import static io.qameta.allure.Allure.step;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AvitoAuth extends TestBase{
+public class AvitoAuth extends TestBase {
+
+    String url = "https://www.etxt.ru/";
 
     @Test
     @AllureId("11161")
@@ -20,9 +23,10 @@ public class AvitoAuth extends TestBase{
     @Story("Авторизация на главной странице")
     @Owner("allure8")
     @Feature("Auth")
+
     public void testAuth() {
         step("Открываем главную страницу");
-        open("https://www.etxt.ru/");
+        open(url);
 
         step("Нажимаем на Вход и регистрация");
         $x("//a[@class='mod-header__auth-login js-target']").click();
@@ -40,7 +44,10 @@ public class AvitoAuth extends TestBase{
 
         step("Проверяем что авторизовались правильно", () -> {
             step("Мы находимся на главной странице сайта");
-            $("title").shouldHave(Condition.attribute("text","Биржа копирайтинга eTXT."));
+//            $("title").shouldHave(Condition.attribute("text", "eTXT."));
+            String currentUrl = WebDriverRunner.getWebDriver().getCurrentUrl();
+            assertEquals(url, currentUrl);
+
             step("Пользователь авторизован");
             $x("//span[@class='js-openUserMenu']").shouldHave(Condition.text("qaguru1"));
         });
